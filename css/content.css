@@ -63,7 +63,6 @@
   font-weight: 500;
   color: var(--text-l1);
   margin-top: 3rem;
-  scroll-margin-top: 5rem;
 }
 
 .content h2:first-child {
@@ -176,9 +175,14 @@
   }
 }
 
+@media (max-width: 1024px) {
+  html {
+    scroll-padding-top: calc(var(--header-offset) + 4rem);
+  }
+}
+
 @media (max-width: 768px) {
   .content h2 {
     margin-top: 2.5rem;
-    scroll-margin-top: 8rem;
   }
 }
