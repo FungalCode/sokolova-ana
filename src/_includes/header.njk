@@ -1,0 +1,14 @@
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="logo">Ana Sokolova</a>
+    <button class="burger" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="papers.html"{% if page.fileSlug == "papers" %} class="active"{% endif %}>Papers</a></li>
+        <li><a href="talks.html"{% if page.fileSlug == "talks" %} class="active"{% endif %}>Talks</a></li>
+        <li><a href="teaching.html"{% if page.fileSlug == "teaching" %} class="active"{% endif %}>Teaching</a></li>
+        <li><a href="about.html"{% if page.fileSlug == "about" %} class="active"{% endif %}>About</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

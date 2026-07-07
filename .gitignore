@@ -1,1 +1,5 @@
 /.claude
+/node_modules
+/_site
+src/assets/.comments/
+/email-note.md
