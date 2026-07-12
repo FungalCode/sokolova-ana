@@ -1,6 +1,6 @@
 .hero {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 4rem;
   align-items: start;
   padding-top: 8rem;
@@ -40,7 +40,7 @@
 .contact-grid::before {
   content: '';
   grid-column: 2;
-  grid-row: 1 / span 3;
+  grid-row: 1 / span 2;
   background: var(--text-l1);
   border-radius: 999px;
   margin: 0.5rem 0;
@@ -58,8 +58,10 @@
   white-space: nowrap;
 }
 
-.contact-cell:nth-of-type(odd) { grid-column: 1; }
-.contact-cell:nth-of-type(even) { grid-column: 3; }
+.contact-cell:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+.contact-cell:nth-of-type(2) { grid-column: 1; grid-row: 2; }
+.contact-cell:nth-of-type(3) { grid-column: 3; grid-row: 1; }
+.contact-cell:nth-of-type(4) { grid-column: 3; grid-row: 2; }
 
 .contact-cell img,
 .contact-cell svg {
@@ -77,6 +79,7 @@
 }
 
 .contact-hr {
+  display: none;
   grid-column: 1 / -1;
   border: none;
   height: 1.5px;
@@ -122,16 +125,48 @@
   border-radius: 5px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
+  .hero-image-block {
+    align-self: center;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  .contact-grid::before {
+    display: none;
+  }
+
+  .contact-grid .contact-cell {
+    grid-column: 1;
+    grid-row: auto;
+    white-space: normal;
+  }
+
+  .contact-hr {
+    display: block;
+  }
+}
+
+@media (max-width: 1118px) {
   .hero {
     gap: 3rem;
   }
   .hero-text h1 {
     font-size: 2rem;
   }
+  .hero-image-block {
+    width: 280px;
+  }
+  .image-card {
+    width: 280px;
+    height: 280px;
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -161,27 +196,21 @@
 
   .contact-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 0;
     width: 100%;
   }
 
-  .contact-grid::before {
-    display: none;
-  }
-
-  .contact-cell,
-  .contact-cell:nth-of-type(odd),
-  .contact-cell:nth-of-type(even) {
-    grid-column: 1;
+  .contact-cell {
     font-size: 1.125rem;
-    padding: 0.75rem 0;
-    white-space: normal;
-    border-bottom: 1.5px solid var(--text-l2);
   }
 
-  .contact-cell:last-child {
-    border-bottom: none;
+  .contact-cell + .contact-cell {
+    border-top: 1px solid var(--text-l2);
+  }
+
+  .contact-hr {
+    height: 1px;
+    background: var(--text-l2);
+    margin: 0;
   }
 
   .hero-actions {

@@ -24,6 +24,8 @@
 
 {{ content | safe }}
 
+{% include "footer.njk" %}
+
 <script src="js/nav.js" defer></script>
 {%- for src in extraJs %}
 <script src="{{ src }}" defer></script>
