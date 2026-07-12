@@ -463,6 +463,18 @@
   }
 }
 
+.br { display: none;}
+
+@media screen and (max-width: 470px) {
+  .br {
+    display: block;
+  }
+
+  .subtitle-sep {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 370px) {
   .subpage-sidebar {
     padding: 0;
@@ -470,3 +482,4 @@
     box-shadow: none;
   }
 }
+
