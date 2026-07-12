@@ -335,6 +335,7 @@
 
   .content-section--subpage {
     margin-top: 2rem;
+    gap: 3rem;
   }
 
   .subpage-sidebar {
