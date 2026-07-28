@@ -107,3 +107,9 @@ ul {
   gap: .5rem;
   align-items: center;
 }
+
+@media screen and (width < 465px) {
+  .btn {
+    font-size: 1.125rem;
+  }
+}

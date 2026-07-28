@@ -97,7 +97,7 @@
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 2.5rem;
 }
 
@@ -109,8 +109,19 @@
 }
 
 .calm_logo {
-  height: 100%;
   max-width: fit-content;
+  height: 100%;
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 4px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: .3s ease;
+}
+
+.calm_logo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
 .image-card {
@@ -230,6 +241,14 @@
   }
 
   .hero-actions .btn {
+    width: fit-content;
+  }
+}
+
+@media screen and (width < 465px) {
+  .calm_logo {
     width: 100%;
+    max-width: 100%;
+    padding: 8px;
   }
 }
