@@ -1,16 +1,15 @@
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="index.html" class="logo">
-      <img src="assets/calm_logo.svg" alt="CALM Research Group Logo">
+    <a href="index.html" class="header-logo">
+     Ana Sokolova's Homepage
     </a>
     <button class="burger" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
     <nav>
       <ul class="nav-list">
-        <li><a href="index.html"{% if page.fileSlug == "" %} class="active" {% endif%}>Home</a></li>
         <li><a href="papers.html"{% if page.fileSlug == "papers" %} class="active"{% endif %}>Papers</a></li>
         <li><a href="talks.html"{% if page.fileSlug == "talks" %} class="active"{% endif %}>Talks</a></li>
         <li><a href="teaching.html"{% if page.fileSlug == "teaching" %} class="active"{% endif %}>Teaching</a></li>
-        <li><a href="about.html"{% if page.fileSlug == "about" %} class="active"{% endif %}>About</a></li>
+        <li><a href="about.html"{% if page.fileSlug == "about" %} class="active"{% endif %}>Personal</a></li>
       </ul>
     </nav>
   </div>

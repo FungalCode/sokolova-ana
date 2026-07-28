@@ -2,9 +2,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 4rem;
-  align-items: start;
-  padding-top: 8rem;
-  padding-bottom: 2rem;
+  align-items: end;
+  padding-top: 4vh;
+  padding-bottom: 0rem;
 }
 
 .hero-text{
@@ -12,7 +12,7 @@
 }
 
 .hero-text .logo {
-  height: 3rem;
+  height: 4rem;
   margin-bottom: 1.5rem;
 }
 
@@ -28,6 +28,12 @@
   color: var(--text-l0);
   margin-top: 0.5rem;
   font-weight: 400;
+}
+
+.title {
+  font-size: 1.25rem;
+  margin-top: .5rem;
+  color: rgb(75, 74, 74);
 }
 
 .contact-grid {
@@ -91,7 +97,7 @@
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 2rem;
   margin-top: 2.5rem;
 }
 
@@ -100,6 +106,11 @@
   flex-direction: column;
   width: 320px;
   gap: 0.75rem;
+}
+
+.calm_logo {
+  height: 100%;
+  max-width: fit-content;
 }
 
 .image-card {

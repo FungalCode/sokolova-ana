@@ -62,10 +62,9 @@ ul {
   list-style: none;
 }
 
-.logo {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+.header-logo {
   font-weight: 500;
-  font-size: 1.75rem;
+  font-size: 1.125rem;
   color: var(--text-l0);
   letter-spacing: 0.01em;
 }
