@@ -1,0 +1,710 @@
+\documentclass[11pt,a4paper]{article}
+
+% ----------------------------------------------------------------------
+%  Website Guide — Ana Sokolova personal website
+%  A practical manual for editing and maintaining the site.
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\tcbuselibrary{skins,breakable}
+
+% ---------- colors ----------------------------------------------------
+\definecolor{ink}{HTML}{1A1A1A}
+\definecolor{accent}{HTML}{2A5C8A}
+\definecolor{soft}{HTML}{F4F6F9}
+\definecolor{codebg}{HTML}{F5F5F2}
+\definecolor{codeframe}{HTML}{D9D9D2}
+\definecolor{keyword}{HTML}{2A5C8A}
+\definecolor{comment}{HTML}{6A8A5A}
+\definecolor{string}{HTML}{9A5B2A}
+\definecolor{warn}{HTML}{B23A2E}
+\definecolor{tip}{HTML}{2E7D5B}
+\definecolor{muted}{HTML}{666666}
+
+\color{ink}
+
+% ---------- Hyperlinks -------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Website Guide — Ana Sokolova},
+  pdfauthor={Samuel Lackner}
+}
+
+% ---------- Headers / footers -----------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{\small\textcolor{muted}{Website Guide}}
+\fancyhead[R]{\small\textcolor{muted}{Ana Sokolova}}
+\fancyfoot[C]{\small\textcolor{muted}{\thepage}}
+
+% ---------- Section styling -------------------------------------------
+\titleformat{\section}
+  {\Large\bfseries\color{accent}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.7em}
+
+% ---------- Code listing styles ---------------------------------------
+\lstdefinestyle{shell}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  frame=single,
+  rulecolor=\color{codeframe},
+  framesep=6pt,
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+}
+
+\lstdefinelanguage{yamlfront}{
+  keywords={layout,title,description,extraCss,extraJs},
+  keywordstyle=\color{keyword}\bfseries,
+  morecomment=[l]{\#},
+  commentstyle=\color{comment},
+  sensitive=true,
+}
+
+\lstdefinestyle{code}{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{keyword}\bfseries,
+  commentstyle=\color{comment}\itshape,
+  stringstyle=\color{string},
+  frame=single,
+  rulecolor=\color{codeframe},
+  framesep=6pt,
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+}
+
+% ---------- Callout boxes ---------------------------------------------
+\newtcolorbox{importantbox}{
+  breakable, enhanced, colback=warn!6, colframe=warn,
+  boxrule=0.8pt, arc=2pt, left=10pt, right=10pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries, title={\; Important}
+}
+\newtcolorbox{tipbox}{
+  breakable, enhanced, colback=tip!7, colframe=tip,
+  boxrule=0.8pt, arc=2pt, left=10pt, right=10pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries, title={\; Tip}
+}
+\newtcolorbox{notebox}{
+  breakable, enhanced, colback=soft, colframe=accent!60,
+  boxrule=0.8pt, arc=2pt, left=10pt, right=10pt, top=8pt, bottom=8pt,
+  fonttitle=\bfseries, title={\; Note}
+}
+
+% ---------- Small helpers ---------------------------------------------
+\newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\cmd}[1]{\texttt{#1}}
+
+% ======================================================================
+\begin{document}
+
+% ---------- Title -----------------------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{3cm}
+\begin{center}
+  {\Huge\bfseries\color{accent} How to Use Your Website}\\[0.6cm]
+  {\Large A practical guide for editing and maintaining\\ your personal website}\\[1.4cm]
+  {\large Ana Sokolova}\\[0.3cm]
+  {\color{muted}\large Personal Academic Website}\\[2.4cm]
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.82\textwidth}
+\begin{notebox}
+This guide walks you through everything you need to run and edit the
+website yourself: installing the tools, understanding the folder
+structure, changing text and images, previewing your work, and
+publishing it online. It assumes you are comfortable reading and writing
+HTML, but does \emph{not} assume any deeper programming experience.
+Anything more complex will be handled by me.
+\end{notebox}
+\end{minipage}
+\end{center}
+
+\vfill
+\begin{center}
+{\color{muted}\small Website design and development by
+\href{https://samuel-lackner.at/}{Samuel Lackner} — samuel-lackner.at}
+\end{center}
+\end{titlepage}
+
+% ---------- Table of contents -----------------------------------------
+\tableofcontents
+\newpage
+
+% ======================================================================
+\section{Overview: How the Website Works}
+
+Before diving in, here is the big picture in plain terms.
+
+Your website is a \textbf{static site}: it is a collection of plain HTML,
+CSS, and JavaScript files. There is no database and no server-side
+software to worry about. To avoid repeating the same header, footer, and
+sidebar on every page, the site is assembled by a small \textbf{build
+tool} called \href{https://www.11ty.dev/}{Eleventy (11ty)}. You edit
+simple source files in the \file{src/} folder; the build tool stitches
+them together into the finished website.
+
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\begin{tcolorbox}[colback=soft, colframe=accent!50, arc=2pt, boxrule=0.6pt]
+\centering
+\ttfamily
+You edit files in \textbf{src/} \quad$\longrightarrow$\quad
+the build tool assembles them \quad$\longrightarrow$\quad
+finished site appears in \textbf{\_site/} \quad$\longrightarrow$\quad
+GitHub publishes it online
+\end{tcolorbox}
+\end{minipage}
+\end{center}
+
+\noindent The hosting and rebuilding happen automatically on
+\textbf{GitHub}: every time you save your changes to the repository, the
+site is rebuilt and published for you. You never have to upload files by
+hand.
+
+\begin{tipbox}
+You only ever need to edit files inside the \file{src/} folder. Everything
+outside it is either configuration (handled by me) or output
+generated automatically.
+\end{tipbox}
+
+% ======================================================================
+\section{Setup and Installation}
+
+You only need to do this section \emph{once}, when you first set up the
+project on your computer.
+
+\subsection{What you need}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item A \textbf{terminal} (the ``Command Prompt'' or ``Terminal''
+        application on your computer).
+  \item \textbf{Node.js}, which provides the \cmd{npm} command used to
+        install and run the build tool.
+\end{itemize}
+
+\noindent Node.js can be downloaded and installed from:
+\begin{center}
+\href{https://nodejs.org/en/download}{https://nodejs.org/en/download}
+\end{center}
+
+\noindent Installing Node.js automatically includes \cmd{npm}, so you do
+not need to install anything else separately. You will need it for the
+\cmd{npm install} and \cmd{npm run serve} commands later.
+
+\begin{tipbox}
+To check that everything installed correctly, open a terminal and type
+the two commands below. If each prints a version number, you are ready.
+\begin{lstlisting}[style=shell]
+node -v
+npm -v
+\end{lstlisting}
+\end{tipbox}
+
+\subsection{Downloading the project}
+
+Download (``clone'') the project from GitHub by running this command in
+your terminal:
+
+\begin{lstlisting}[style=shell]
+git clone https://github.com/FungalCode/sokolova-ana.git
+\end{lstlisting}
+
+\noindent This creates a folder containing all the website files. You can
+then transfer all the files into your \emph{own} GitHub repository, so
+that you are the owner of the published site.
+
+\subsection{Enabling GitHub Pages}\label{sec:pages}
+
+The website is hosted for free using \textbf{GitHub Pages}. In your new
+repository this must be switched on \emph{once}, and set to the correct
+mode.
+
+\begin{importantbox}
+In your GitHub repository, go to:\\[4pt]
+\textbf{Settings} $\rightarrow$ \textbf{Pages} $\rightarrow$
+\textbf{Source}\\[4pt]
+and choose \textbf{``GitHub Actions''} — \emph{not} ``Deploy from a
+branch''.\\[6pt]
+This is essential. The site is built by an automated GitHub Actions
+workflow, and that only works when this option is selected. With the
+wrong setting, publishing will fail.
+\end{importantbox}
+
+\subsection{How building and publishing works}
+
+Because the site is built by GitHub Actions, it \textbf{automatically
+rebuilds every time you push changes} to the repository. There is nothing
+to upload manually — you save your changes, and a minute or so later the
+live site is updated.
+
+\begin{notebox}
+\textbf{First-time exception.} Right after setup, if you have not pushed
+any changes yet, the site will not have been built. You have two ways to
+trigger the very first build:
+\begin{enumerate}[leftmargin=1.6em]
+  \item Make any small change and push it, which starts the build
+        automatically; \emph{or}
+  \item Trigger the build by hand: in the GitHub repository, go to
+        \textbf{Actions} $\rightarrow$ \textbf{Deploy to GitHub Pages}
+        (menu on the left) $\rightarrow$ \textbf{Run workflow}
+        $\rightarrow$ \textbf{Run workflow}.
+\end{enumerate}
+\end{notebox}
+
+\subsection{Getting later updates}
+
+If I make improvements to the project and you want to pull
+them into your copy, run this inside the project folder:
+
+\begin{lstlisting}[style=shell]
+git pull origin main
+\end{lstlisting}
+
+\noindent Alternatively, you can simply clone the project again from
+scratch.
+
+% ======================================================================
+\section{The Project Structure}
+
+Everything you will ever edit lives inside the \file{src/} folder.
+
+\begin{tipbox}
+You can safely ignore everything \emph{outside} the \file{src/} folder.
+Those files are configuration and build machinery.
+\end{tipbox}
+
+\subsection{The page files}
+
+Inside \file{src/} you will find five HTML files, one for each page of the
+website:
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\file{index.html}    & Home \\
+\file{about.html}    & Personal / About \\
+\file{papers.html}   & Papers \\
+\file{talks.html}    & Talks \\
+\file{teaching.html} & Teaching \\
+\end{tabular}
+\end{center}
+
+\noindent There is also a file called \file{src.11tydata.js}. This is part
+of the build tool and can be ignored — it simply connects each page to its
+web address (for example, it makes
+\texttt{www.example.com/papers.html} come from \file{papers.html}).
+
+\subsection{\file{\_includes} — the reused pieces}
+
+This folder holds all the \textbf{recurring parts} of the website, so you
+only have to edit them in one place:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \file{footer.njk} — the footer at the bottom of every page.
+  \item \file{header.njk} — the header / navigation bar at the top of
+        every page.
+  \item \file{sidebar.njk} — the sidebar on the subpages, showing your
+        image, title, name, contact details, and links.
+  \item \file{base.njk} — combines everything above into a complete,
+        working HTML page.
+\end{itemize}
+
+\begin{notebox}
+The \file{.njk} files are ``Nunjucks'' templates. In practice they are
+mostly ordinary HTML, with a little extra template syntax. As long as you
+keep to the existing layout, editing them is just like editing HTML.
+\end{notebox}
+
+\subsection{\file{assets} — images, icons, fonts, and papers}
+
+This folder contains all images, icons, fonts (in the \file{fonts}
+subfolder), and PDF papers (in the \file{papers} subfolder). Put any new
+images and papers here, and make sure to reference them correctly, for
+example:
+
+\begin{lstlisting}[style=shell]
+assets/papers/doc.pdf
+assets/image.png
+\end{lstlisting}
+
+\begin{importantbox}
+The path always begins with \file{assets/}. If you write the path
+without it, the image or PDF will not be found and will not appear on the
+site.
+\end{importantbox}
+
+\subsection{\file{js} — the JavaScript}
+
+There are only two small JavaScript files, and you will rarely need to
+touch them:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \file{nav.js} — makes the ``burger'' menu work on mobile screens.
+  \item \file{toc.js} — makes the table of contents on the homepage work
+        (the one on the left, next to the content).
+\end{itemize}
+
+\subsection{\file{css} — the styling}
+
+Edit these files whenever you want to change how things \emph{look} — text
+size, spacing between elements, colors, and so on.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \file{base.css} — defines the variables for all colors and the
+        like (for example \texttt{-{}-text-l0: \#050505;}), plus basics
+        such as the font and the buttons.
+  \item \file{layout.css} — styling for the body, header, container, and
+        footer.
+  \item \file{content.css} — everything for the content: the text,
+        sidebars, images, and links (for example, the link to Google
+        Scholar).
+  \item \file{hero.css} — specifics for the first section of the homepage:
+        the contact grid, the ``calm'' logo, the image, and so on.
+  \item \file{fonts.css} — a simple file that loads the fonts.
+\end{itemize}
+
+% ======================================================================
+\section{Making Changes}
+
+\subsection{Previewing your changes locally}
+
+Before publishing anything, you can preview your changes on your own
+computer. In the project folder, run:
+
+\begin{lstlisting}[style=shell]
+npm run serve
+\end{lstlisting}
+
+\begin{notebox}
+The very first time only, you must install the tools once beforehand:
+\begin{lstlisting}[style=shell]
+npm install
+\end{lstlisting}
+You only ever need to do this once per computer.
+\end{notebox}
+
+\noindent \cmd{npm run serve} starts a small web server on your machine
+and prints a link, usually:
+\begin{center}
+\href{http://localhost:8080}{http://localhost:8080}
+\end{center}
+
+\noindent Open that link in your browser to see the site exactly as it
+will appear online. It updates automatically as you edit and save. When
+you are finished previewing, you can stop the server by pressing
+\texttt{Ctrl + C} in the terminal.
+
+\subsection{Editing the meta description and title}
+
+The \textbf{title} and \textbf{description} are what appear on a Google
+search results page and in the browser tab. Each page has these at the
+very top, written between two lines of three dashes (\texttt{-{}-{}-}):
+
+\begin{lstlisting}[style=code, language=yamlfront]
+---
+layout: base.njk
+title: About - Ana Sokolova
+extraCss:
+  - css/content.css
+---
+\end{lstlisting}
+
+\noindent You can change the title, and optionally add a description:
+
+\begin{lstlisting}[style=code, language=yamlfront]
+---
+layout: base.njk
+title: New Title
+description: New description
+extraCss:
+  - css/content.css
+---
+\end{lstlisting}
+
+\begin{importantbox}
+Do \emph{not} change the \texttt{layout}, \texttt{extraCss}, or
+\texttt{extraJs} lines. These tell the build tool how to assemble the page
+and which stylesheets and scripts it needs. Only edit the \texttt{title}
+and \texttt{description}.
+\end{importantbox}
+
+\subsection{Editing the page content (HTML)}
+
+The homepage is separated into two parts: the \textbf{hero section} at the
+top and the \textbf{content section} below it.
+
+In the content section you can freely type any HTML — headings, links,
+tables — and it will always look fine. The subpages work the same way, and
+are simpler.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Main content on the homepage:} open \file{index.html} and
+        scroll down to \texttt{<main class="content">}. Inside it you may
+        freely write any valid HTML: different headings
+        (\texttt{h1}, \texttt{h2}, \texttt{h3}, \dots), links, tables, and
+        so on.
+  \item \textbf{Main content on a subpage:} the same, but simpler — you
+        will find \texttt{<main class="content">} right at the top of the
+        file.
+\end{itemize}
+
+\begin{tipbox}
+\textbf{The hero section is more delicate.} It is a more complex layout,
+so take a little care there. You can still change any text — such as your
+phone number or email — but if something becomes much longer or shorter
+(for example a very long email address), just check afterwards that
+everything still looks good, including on your phone, in case something
+overflows. In practice this is rarely a problem.
+\end{tipbox}
+
+\subsection{Editing the recurring content (footer, header, sidebar)}
+
+To change the footer, header, or sidebar, edit the corresponding file in
+the \file{\_includes} folder. This is mostly HTML with a little build-tool
+syntax. As long as you stick to the current layout, this should present no
+problems.
+
+\subsection{Changing the styling}
+
+All styling lives in the \file{css} folder. The site is styled with CSS
+\emph{classes} (names beginning with a dot, such as \texttt{.content} or
+\texttt{.hero}) and, for colors and spacing, a set of \emph{variables}
+defined once at the top of \file{base.css}. To change how something looks,
+find the matching class or variable in the file listed below and edit it.
+
+\begin{tipbox}
+The quickest way to find what controls an element is to open the site in
+your browser, right-click the element, and choose \textbf{``Inspect''}.
+The panel shows the exact class name (for example \texttt{.contact-cell}).
+Search for that name in the relevant CSS file to jump straight to it.
+\end{tipbox}
+
+\subsubsection*{Global colors and spacing --- top of \file{base.css}}
+
+These variables are defined once and reused everywhere, so changing one
+here updates the whole site at once. They sit in the
+\texttt{:root \{ \dots \}} block at the very top of \file{base.css}.
+
+\begin{center}
+\begin{tabular}{@{}p{4.6cm}p{10.4cm}@{}}
+\textbf{Variable} & \textbf{Controls} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+\texttt{-{}-bg}               & Page background color \\[3pt]
+\texttt{-{}-text-l0/l1/l2}    & Main text colors, darkest to slightly lighter \\[3pt]
+\texttt{-{}-text-muted}       & Muted grey text (footer, sidebar subtitles) \\[3pt]
+\texttt{-{}-primary}          & Accent color for content links and hovers (currently green) \\[3pt]
+\texttt{-{}-cv-color}         & Color of the ``CV'' link in the sidebar \\[3pt]
+\texttt{-{}-border}           & Color of card borders and dividing lines \\[3pt]
+\texttt{-{}-container-padding} & Left/right page margin (space to the screen edge) \\[3pt]
+\texttt{-{}-radius-card}, \texttt{-{}-radius-button}, \texttt{-{}-radius-anchor} & Corner roundness of cards, buttons, and icon tiles \\[3pt]
+\texttt{-{}-icons-gap}        & Spacing between the social-icon tiles \\[3pt]
+\texttt{-{}-header-offset}    & Height reserved for the sticky top header \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{Everything else --- by file and class}
+
+For anything that is not a global color or spacing value, find the class
+below in the named file and edit its properties.
+
+\vspace{4pt}
+\noindent\textbf{\file{base.css}} --- fonts and buttons
+\begin{center}
+\begin{tabular}{@{}p{8.0cm}p{7.0cm}@{}}
+\textbf{To change\dots} & \textbf{Look for\dots} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+The body font of the whole site & \texttt{body \{ font-family \}} \\[3pt]
+Button look (Publications, Contact, etc.) & \texttt{.btn}, \texttt{.btn-primary}, \texttt{.btn-secondary} \\
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{\file{layout.css}} --- header, navigation, footer
+\begin{center}
+\begin{tabular}{@{}p{8.0cm}p{7.0cm}@{}}
+\textbf{To change\dots} & \textbf{Look for\dots} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+Overall page width and side padding & \texttt{.container} \\[3pt]
+The top navigation bar & \texttt{.site-header-inner} \\[3pt]
+The navigation links and their underline hover & \texttt{.site-header .nav-list a} \\[3pt]
+The mobile ``burger'' menu icon & \texttt{.burger} \\[3pt]
+The footer and its links & \texttt{.site-footer-inner}, \texttt{.footer-links} \\
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{\file{content.css}} --- page text, sidebar, links, table of contents
+\begin{center}
+\begin{tabular}{@{}p{8.0cm}p{7.0cm}@{}}
+\textbf{To change\dots} & \textbf{Look for\dots} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+Body paragraph text (size, color, spacing) & \texttt{.content p} \\[3pt]
+Headings within a page & \texttt{.content h1}, \texttt{.content h2}, \texttt{.content h3} \\[3pt]
+Links inside the content (e.g.\ Google Scholar) & \texttt{.content a} \\[3pt]
+Bulleted lists & \texttt{.content ul} \\[3pt]
+The Papers / Talks list rows & \texttt{.papers-list}, \texttt{.talks-list} \\[3pt]
+The two-column layout (sidebar + text) & \texttt{.content-section} \\[3pt]
+The subpage sidebar card (photo, name, contact) & \texttt{.subpage-sidebar}, \texttt{.sidebar-title}, \texttt{.sidebar-contact} \\[3pt]
+The social-icon tiles (Scholar, ORCID, CV\dots) & \texttt{.social-link}, \texttt{.socials}, \texttt{.associations} \\[3pt]
+The table of contents (homepage) & \texttt{.toc}, \texttt{.toc-list} \\[3pt]
+The photo on the About page & \texttt{.about-image} \\
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{\file{hero.css}} --- the homepage's first (top) section
+\begin{center}
+\begin{tabular}{@{}p{8.0cm}p{7.0cm}@{}}
+\textbf{To change\dots} & \textbf{Look for\dots} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+The overall hero layout & \texttt{.hero} \\[3pt]
+The name heading & \texttt{.hero-text h1} \\[3pt]
+The subtitle (``Full Professor'') & \texttt{.title} \\[3pt]
+The contact grid (phone, mail, location, room) & \texttt{.contact-grid}, \texttt{.contact-cell} \\[3pt]
+The row of buttons & \texttt{.hero-actions} \\[3pt]
+The photo card & \texttt{.image-card}, \texttt{.hero-image} \\[3pt]
+The ``calm'' logo & \texttt{.calm\_logo} \\
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{\file{fonts.css}} --- font loading
+\begin{center}
+\begin{tabular}{@{}p{8.0cm}p{7.0cm}@{}}
+\textbf{To change\dots} & \textbf{Look for\dots} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+Which font files are loaded & the \texttt{@font-face} blocks \\
+\end{tabular}
+\end{center}
+
+\begin{notebox}
+To switch to a different font entirely, you first add its \texttt{@font-face}
+import in \file{fonts.css} and then set the body's \texttt{font-family} in
+\file{base.css}.
+\end{notebox}
+
+% ======================================================================
+\section{Publishing Your Changes}
+
+When you are happy with your changes, publish them to the live website
+using the usual Git commands in your terminal, inside the project folder:
+
+\begin{lstlisting}[style=shell]
+git add .
+git commit -m "Describe what you changed"
+git push
+\end{lstlisting}
+
+\noindent That is all. Pushing to the repository automatically triggers a
+rebuild on GitHub, and a minute or so later the live site reflects your
+changes.
+
+% ======================================================================
+\section{Quick Reference}
+
+\subsection{Commands cheat sheet}
+
+\begin{center}
+\begin{tabular}{@{}p{5.4cm}p{8.2cm}@{}}
+\textbf{Command} & \textbf{What it does} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+\cmd{npm install}        & Install the tools (once per computer) \\[3pt]
+\cmd{npm run serve}      & Start a local preview at localhost:8080 \\[3pt]
+\cmd{git pull origin main} & Get the latest updates from GitHub \\[3pt]
+\cmd{git add .}          & Stage all your changes \\[3pt]
+\cmd{git commit -m "..."} & Save your changes with a message \\[3pt]
+\cmd{git push}           & Publish your changes to the live site \\
+\end{tabular}
+\end{center}
+
+\subsection{Where do I edit\dots?}
+
+\begin{center}
+\begin{tabular}{@{}p{5.0cm}p{8.6cm}@{}}
+\textbf{I want to change\dots} & \textbf{Go to\dots} \\[2pt]
+\hline
+\rule{0pt}{2.4ex}%
+Homepage text            & \file{src/index.html} \\[3pt]
+A subpage's text         & \file{src/about.html}, \file{papers.html}, \dots \\[3pt]
+Header / navigation      & \file{src/\_includes/header.njk} \\[3pt]
+Footer                   & \file{src/\_includes/footer.njk} \\[3pt]
+Sidebar                  & \file{src/\_includes/sidebar.njk} \\[3pt]
+An image or PDF          & add it to \file{src/assets/} \\[3pt]
+colors                  & top of \file{src/css/base.css} \\[3pt]
+Page title / description & top of the page's HTML file \\
+\end{tabular}
+\end{center}
+
+% ======================================================================
+\section{Troubleshooting}
+
+\begin{description}[leftmargin=0pt, style=nextline]
+  \item[The site did not update after I pushed.]
+        Give it a minute or two — the rebuild takes a moment. You can
+        watch its progress in the \textbf{Actions} tab on GitHub. If it
+        never builds, check that GitHub Pages is set to \textbf{``GitHub
+        Actions''} (see Section~\ref{sec:pages}).
+
+  \item[My image or PDF is not showing.]
+        Check the path. It must begin with \file{assets/}, for example
+        \file{assets/image.png}, and the file must actually be inside
+        \file{src/assets/}.
+
+  \item[\texttt{npm run serve} gives an error the first time.]
+        Make sure you ran \cmd{npm install} once beforehand, and that
+        Node.js is installed (\cmd{node -v} should print a version).
+
+  \item[The very first build never ran.]
+        Right after setup there are no changes to trigger it. Either push
+        a small change, or trigger it by hand under \textbf{Actions}
+        $\rightarrow$ \textbf{Deploy to GitHub Pages} $\rightarrow$
+        \textbf{Run workflow}.
+
+  \item[Something looks broken and I cannot tell why.]
+        This is exactly the kind of thing I will handle — get
+        in touch and describe what you changed.
+\end{description}
+
+\vfill
+\begin{center}
+{\color{muted}\small For anything more complex than the above, get in
+touch with me,
+\href{https://samuel-lackner.at/}{Samuel Lackner}.}
+\end{center}
+
+\end{document}
